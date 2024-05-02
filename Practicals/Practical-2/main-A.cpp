@@ -1,317 +1,177 @@
-//  main.cpp
-//  dda
 //
-//  Created by Paras Ningune on 25/02/24.
+//  main.cpp
+//  dda_prac
+//
+//  Created by Paras Ningune on 02/05/24.
 //
 
 #include <iostream>
-#include <GLUT/glut.h>
-using namespace std;
+#include <GLUT/glut.h> // Chnage it to #include <gl/glut.h>
 
-#define h  1000
-#define w  1000
+using namespace std;
+#define h 750
+#define w 750
+
+const int max_points = 20;
+const int max_lines = 10;
+
+int num_lines = 0;
+int num_points = 0;
+int selected = 1;
+int lines[max_lines][2][2];
 
 void init()
 {
-    glClearColor(0.0, 0.0, 0.0,0.0);
-    gluOrtho2D(-w/2, h/2, -w/2, h/2);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0, 0, 0, 0);
     glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+    gluOrtho2D(-w/2, h/2, -w/2, h/2);
 }
 
-void display_point(int x, int y)
+void plot_point(int x, int y)
 {
-    glColor3f(1, 1, 0);
     glBegin(GL_POINTS);
-        glVertex2i(x, y);
+    glVertex2i(x, y);
     glEnd();
     glFlush();
+    
 }
 
 int sign(float x)
 {
-    if(x==0)
+    if(x>=0)
     {
-        return 0;;
+        return 1;
     }
-    else if (x<0)
+    else
     {
         return -1;
     }
-    else
-    {
-        return 0;
-    }
 }
-
 
 void draw_axis()
 {
-    for(int i=-h; i<h; i++)
+    for(int i=-h/2; i<=h; i++)
     {
-        display_point(i, 0);
-        display_point(0, i);
+        plot_point(i, 0);
+        plot_point(0, i);
     }
-    glFlush();
 }
 
-void draw_simple_line()
+void DDA(int x0, int y0, int x1, int y1)
 {
-    float x0, y0, x1, y1;
+    float dx = x1-x0;
+    float dy = y1-y0;
+    int k;
     
-    cout<<"Enter coordinates of first point: \n";
-    cout<<"X0: ";
-    cin>>x0;
-    
-    cout<<"Y0: ";
-    cin>>y0;
-    
-    cout<<"Enter coordinates of second point: \n";
-    cout<<"X1: ";
-    cin>>x1;
-    
-    cout<<"y1: ";
-    cin>>y1;
-    cout<<endl;
-    
-    if(x0==x1 && y0==y1)
+    if(dx > dy)
     {
-        cout<<"Both points same!!";
-    }
-    
-    float dx, dy, k;
-    
-    dx = x1-x0;
-    dy = y1-y0;
-    
-    if(abs(dx) > abs(dy))
-    {
-        k = dx;
+        k = abs(dx);
     }
     else
     {
-        k = dy;
+        k = abs(dy);
     }
+    dx = dx/k;
+    dy = dy/k;
     
-    float DX, DY;
+    float x = x0 + 0.5 * sign(dx);
+    float y = y0 + 0.5 * sign(dy);
     
-    DX = dx/k;
-    DY = dy/k;
-    
-    float x = x0 + 0.5 * sign(DX);
-    float y = y0  + 0.5 * sign(DY);
-
-    display_point(x, y);
+    plot_point(x, y);
     for(int i=0; i<=k; i++)
     {
-        display_point(x, y);
-        
-        x += DX;
-        y += DY;
-    }
-    glFlush();
-}
-
-void DDA(float x0, float y0, float x1, float y1)
-{
-    
-    if(x0==x1 && y0==y1)
-    {
-        cout<<"Both points same!!";
-    }
-    
-    float dx, dy, k;
-    
-    dx = x1-x0;
-    dy = y1-y0;
-    
-    if(abs(dx) > abs(dy))
-    {
-        k = dx;
-    }
-    else
-    {
-        k = dy;
-    }
-    
-    float DX, DY;
-    
-    DX = dx/k;
-    DY = dy/k;
-    
-    float x = x0 + 0.5 * sign(DX);
-    float y = y0  + 0.5 * sign(DY);
-
-    display_point(x, y);
-    for(int i=0; i<=k; i++)
-    {
-        display_point(x, y);
-        
-        x += DX;
-        y += DY;
-    }
-    glFlush();
-}
-
-void draw_solid_line()
-{
-    float x0, y0, x1, y1;
-    
-    cout<<"Enter coordinates of first point: \n";
-    cout<<"X0: ";
-    cin>>x0;
-    
-    cout<<"Y0: ";
-    cin>>y0;
-    
-    cout<<"Enter coordinates of second point: \n";
-    cout<<"X1: ";
-    cin>>x1;
-    
-    cout<<"y1: ";
-    cin>>y1;
-    cout<<endl;
-    
-    if(x0==x1 && y0==y1)
-    {
-        cout<<"Both points same!!";
-    }
-    
-    float dx, dy, k;
-    
-    dx = x1-x0;
-    dy = y1-y0;
-    
-    if(abs(dx) > abs(dy))
-    {
-        k = dx;
-    }
-    else
-    {
-        k = dy;
-    }
-    
-    float DX, DY;
-    
-    DX = dx/k;
-    DY = dy/k;
-    
-    float x = x0 + 0.5 * sign(DX);
-    float y = y0  + 0.5 * sign(DY);
-    
-    glLineWidth(50.0);
-    display_point(x, y);
-    
-    for(int i=0; i<=k; i++)
-    {
-        display_point(x, y);
-        
-        x += DX;
-        y += DY;
-    }
-    glFlush();
-}
-
-void draw_dotted_line()
-{
-    float x0, y0, x1, y1;
-    
-    cout<<"Enter coordinates of first point: \n";
-    cout<<"X0: ";
-    cin>>x0;
-    
-    cout<<"Y0: ";
-    cin>>y0;
-    
-    cout<<"Enter coordinates of second point: \n";
-    cout<<"X1: ";
-    cin>>x1;
-    
-    cout<<"y1: ";
-    cin>>y1;
-    cout<<endl;
-    
-    if(x0==x1 && y0==y1)
-    {
-        cout<<"Both points same!!";
-    }
-    
-    float dx, dy, k;
-    
-    dx = x1-x0;
-    dy = y1-y0;
-    
-    if(abs(dx) > abs(dy))
-    {
-        k = dx;
-    }
-    else
-    {
-        k = dy;
-    }
-    
-    float DX, DY;
-    
-    DX = dx/k;
-    DY = dy/k;
-    
-    float x = x0 + 0.5 * sign(DX);
-    float y = y0  + 0.5 * sign(DY);
-    
-    glPointSize(2);
-    display_point(x, y);
-    
-    for(int i=0; i<=k; i++)
-    {
-        if(i%5 == 0)
+        x += dx;
+        y += dy;
+        switch (selected)
         {
-            display_point(x, y);
+            case 1:
+                plot_point(x, y);
+                break;
+            
+            case 2:
+                if(i%3 == 0)
+                {
+                    plot_point(x, y);
+                }
+                break;
+                
+            case 3:
+                if(i%7 != 0)
+                {
+                    plot_point(x, y);
+                }
+                break;
+                
+            case 4:
+                glPointSize(3);
+                plot_point(x, y);
+                break;
+
         }
-        
-        x += DX;
-        y += DY;
     }
-    glFlush();
 }
 
-void Display_Boat()
+void myMouse(int button, int state, int x, int y)
 {
-    DDA(-120 , -200 , 120 , -200);
-    DDA(-120 , -200 , -200 , 0);
-    DDA(-200 , 0 , 200 , 0);
-    DDA(120 , -200 , 200 , 0);
-    
-    DDA(-140 , 0 , 0 , 200);
-    DDA(140 , 0 , 0 , 200);
+    if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    {
+        if(num_lines < max_lines && num_points < max_points)
+        {
+            int x_cor = x - w/2;
+            int y_cor = h/2 - y;
+            
+            lines[num_lines][num_points][0] = x_cor;
+            lines[num_lines][num_points][1] = y_cor;
 
+            plot_point(x_cor, y_cor);
+            num_points++;
+            
+            if(num_points == 2)
+            {
+                DDA(lines[num_lines][0][0], lines[num_lines][0][1], lines[num_lines][1][0], lines[num_lines][1][1]);
+                num_lines++;
+                num_points = 0;
+            }
+        }
+    }
+    
+    if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
+    {
+        glutAttachMenu(GLUT_RIGHT_BUTTON);
+    }
 }
 
+void menu(int value)
+{
+    selected = value;
+}
 
 void display()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-    
-    //draw_axis();
-    //draw_simple_line();
-    //draw_solid_line();
-    //draw_dotted_line();
-    Display_Boat();
+    draw_axis();
+    glFlush();
 }
 
-int main(int charc, char ** charv)
+int main(int argc, char ** argv)
 {
-    glutInit(&charc, charv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
-    glutInitWindowPosition(400,100);
-    glutInitWindowSize(1000,1000);
-    glutCreateWindow("Line Drawing");
-    
+    glutInit(&argc, argv);
+    glutInitWindowSize(w, h);
+    glutInitWindowPosition(100, 100);
+    glutCreateWindow("DDA");
     init();
-    glutDisplayFunc(display);
     
+    glutCreateMenu(menu);
+    glutAddMenuEntry("Simple", 1);
+    glutAddMenuEntry("Dotted", 2);
+    glutAddMenuEntry("Dashed", 3);
+    glutAddMenuEntry("Solid", 4);
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
+    glutDisplayFunc(display);
+    glutMouseFunc(myMouse);
+    glutDisplayFunc(display);
     glutMainLoop();
+    
     return 0;
 }
-
-
-
