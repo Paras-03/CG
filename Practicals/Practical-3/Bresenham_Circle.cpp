@@ -165,12 +165,13 @@ void myMouse(int button, int state, int x, int y)
                 switch (selected)
                 {
                     case 1:
-                        ConcentricCircle(lines[num_lines][0][0], lines[num_lines][0][1], lines[num_lines][1][0], lines[num_lines][1][1]);
-                        //Circle(lines[num_lines][0][0], lines[num_lines][0][1], lines[num_lines][1][0], lines[num_lines][1][1]);
+                        Circle(lines[num_lines][0][0], lines[num_lines][0][1], lines[num_lines][1][0], lines[num_lines][1][1]);
                         break;
                         
                     case 2:
                         ConcentricCircle(lines[num_lines][0][0], lines[num_lines][0][1], lines[num_lines][1][0], lines[num_lines][1][1]);
+                        break;
+                    
                     default:
                         break;
                 }
@@ -194,7 +195,9 @@ int main(int argc, char ** argv)
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(w, h);
     glutCreateWindow("Bresenham Circle");
-    
+    glutCreateMenu(menu);
+    glutAddMenuEntry("Simple", 1);
+    glutAddMenuEntry("Concentric", 2);
     
     init();
     
