@@ -53,7 +53,7 @@ int sign(float x)
 void plot_point(int x, int y)
 {
     glBegin(GL_POINTS);
-    glVertex2f(x, y);
+    glVertex2d(x, y);
     glEnd();
     glFlush();
 }
@@ -76,11 +76,9 @@ void dda(int x0, int y0, int x1, int y1)
     
     dx = dx/k;
     dy = dy/k;
-    cout<<"in dda"<<endl;
     
-    float x = x0 + 0.5*sign(dx);
-    float y = y0 + 0.5*sign(dy);
-    cout<<x<<", "<<y<<endl;
+    float x = x0 + 0.5 * sign(dx);
+    float y = y0 + 0.5 * sign(dy);
     
     plot_point(x, y);
     for(int i=0; i<k; i++)
@@ -163,9 +161,8 @@ void menu(int value)
 
 void display()
 {
-    glClearColor(0, 0, 0, 0);
-    glColor3f(0, 0, 0);
-    
+    glClearColor(1.0,1.0,1.0,0.0);
+    glColor3f(0.0f,0.0f,0.0f);
     glLoadIdentity();
     gluOrtho2D(0, w, 0, h);
     
@@ -175,6 +172,8 @@ void display()
     dda(350,250,400,200);
     dda(400,200,350,150);
     dda(350,150,300,200);
+    
+    glFlush();
 }
 
 int main(int argc, char** argv)
